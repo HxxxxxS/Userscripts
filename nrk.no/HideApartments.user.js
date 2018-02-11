@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        NRK.no | Hide "apartments"
-// @version     1
+// @version     1.1
 // @include     https://*.nrk.no/
 // @author      h
 // @grant       none
@@ -11,10 +11,11 @@
 
 jQuery(document).ready(function($){
   
-  $('head').append('<style>.kur-floor--apartment.aHidden div.kur-floor__content div{ display:none; }')
   $('head').append('<style>.kur-floor--apartment.aHidden{ padding-bottom:0; }')
+  $('head').append('<style>.kur-floor--apartment.aHidden div.kur-floor__content div{ display:none; }')
+  $('head').append('<style>.kur-floor--apartment.aHidden h2.kur-floor__title:after{ margin-left:15px; color: #dadada; content: "(Click to read)" }')
 
-  $('.kur-floor--apartment:has(h2.kur-floor__title)').addClass('aHidden').find('h2.kur-floor__title').append('<small style="margin-left:15px; margin-top:3px; color: #dadada;">(Click to read)</small>');
+  $('.kur-floor--apartment:has(h2.kur-floor__title)').addClass('aHidden');
 
   $('.kur-floor--apartment').on('click', function(){
     $(this).toggleClass('aHidden');
