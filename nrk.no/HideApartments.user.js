@@ -11,9 +11,10 @@
 
 jQuery(document).ready(function($){
   
-  $('head').append('<style>.kur-floor--apartment.aHidden{ max-height: 30px; overflow: hidden; }')
+  $('head').append('<style>.kur-floor--apartment.aHidden div.kur-floor__content div{ display:none; }')
+  $('head').append('<style>.kur-floor--apartment.aHidden{ padding-bottom:0; }')
 
-  $('.kur-floor--apartment').addClass('aHidden').find('h2.kur-floor__title').append('<small style="margin-left:15px; margin-top:3px; color: #dadada;">(Click to read)</small>');
+  $('.kur-floor--apartment:has(h2.kur-floor__title)').addClass('aHidden').find('h2.kur-floor__title').append('<small style="margin-left:15px; margin-top:3px; color: #dadada;">(Click to read)</small>');
 
   $('.kur-floor--apartment').on('click', function(){
     $(this).toggleClass('aHidden');
