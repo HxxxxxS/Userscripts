@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Twitch Chat Sanitizer
-// @version      1
+// @version      1.1.12
 // @description  removes idiocy
 // @author       HxxxxxS @ https://github.com/HxxxxxS/
 // @author       Based on https://greasyfork.org/en/scripts/40811-twitch-chat-deretardifier by hello_frenz
@@ -25,9 +25,9 @@ var blackList = [
 var r9k = 100;
 
 // Set debugMode to true and messages will be highlighted red instead of removed.
-var debugMode = false;
+var debugMode = true;
 // Set logMessages to true and the messages marked as spam will be logged in the console.
-var logMessages = false;
+var logMessages = true;
 
 // ===== Script start =====
 
@@ -55,20 +55,21 @@ var logMessages = false;
         }
     }, 250);
 
-    function addListener (log) {
+    function addListener (log)
+    {
         var observer = new MutationObserver(checkMessage);
         observer.observe(log, {childList: true});
         createMessage('Twitch Chat Sanitizer is now active.');
     }
 
-    function checkMessage (mutation) {
+    function checkMessage (mutation)
+    {
         for (var i = 0; i < mutation.length; i++)
         {
             var newMessage = mutation[i].addedNodes[0];
             if (newMessage)
             {
-                var text = newMessage.innerText.replace(/(?:\@[\w\d]+)*/g,'').replace(/(?:\r\n|\r|\n|\s)+/g,'');
-                text = text.substr(text.indexOf(':') + 1);
+                var text = newMessage.querySelector('div[data-test-selector=comment-message-selector]').innerText.replace(/(?:\@[\w\d]+)*/g,'').replace(/(?:\r\n|\r|\n|\s)+/g,'');
                 if (containsSpam(text))
                 {
                     censorCount++;
@@ -86,24 +87,17 @@ var logMessages = false;
         }
     }
 
-    function containsSpam (text) {
+    function containsSpam (text)
+    {
         if (text.length)
         {
-            if (checkAllCaps(text))
+            if (checkAllCaps(text) || checkBlackList(text) || checkR9k(text))
             {
                 return true;
             }
-            else if (checkBlackList(text))
+            else
             {
-                return true;
-            }
-            else if (checkR9k(text))
-            {
-                return true;
-            }
-            else if (logMessages)
-            {
-                console.log('message allowed = "' + text + '"');
+                if (logMessages) console.log('message allowed = "' + text + '"');
                 return false;
             }
         }
@@ -113,9 +107,11 @@ var logMessages = false;
         }
     }
 
-    function checkAllCaps (text) {
+    function checkAllCaps (text)
+    {
+        var text = text.replace(/\s/g,'');
         var textLength = text.length;
-        if (text.replace(/\s/g,'').length < 2) return true;
+        if (text.length < 2) return true;
         var amountUpperCaseInt = 0;
         for (var i = 0, len = textLength; i < len; i++)
         {
@@ -142,7 +138,8 @@ var logMessages = false;
         }
     }
 
-    function checkR9k(text) {
+    function checkR9k(text)
+    {
         text = text.toUpperCase();
         if (r9k)
         {
@@ -157,8 +154,9 @@ var logMessages = false;
         }
     }
 
-    function createMessage(text){
-        var chat = document.querySelector('[role=log]');
+    function createMessage(text)
+    {
+        var chat = document.querySelector('[role=log],.video-chat__message-list-wrapper ul');
         var msg = document.createElement('div');
         msg.className = 'chat-line__status';
         msg.attributes['data-a-target'] = 'chat-welcome-message';
