@@ -25,9 +25,9 @@ var blackList = [
 var r9k = 100;
 
 // Set debugMode to true and messages will be highlighted red instead of removed.
-var debugMode = true;
+var debugMode = false;
 // Set logMessages to true and the messages marked as spam will be logged in the console.
-var logMessages = true;
+var logMessages = false;
 
 // ===== Script start =====
 
