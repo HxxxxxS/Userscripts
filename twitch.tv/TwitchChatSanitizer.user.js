@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Twitch Chat Sanitizer
-// @version      1.2
+// @version      1.2.1
 // @description  removes idiocy
 // @author       HxxxxxS @ https://github.com/HxxxxxS/
 // @author       Based on https://greasyfork.org/en/scripts/40811-twitch-chat-deretardifier by hello_frenz
@@ -150,7 +150,9 @@ tcs.containsSpam = (text) =>
 {
   if (text.length)
   {
-      if (tcs.checkAllCaps(text)) {
+      if (text.substr(0,1) == '!') {
+          return true;
+      }else if (tcs.checkAllCaps(text)) {
           return true
       }else if(tcs.checkBlackList(text)){
           return true
